@@ -1,3 +1,4 @@
+import './config/database.js'
 import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
@@ -7,8 +8,6 @@ import morgan from 'morgan';
 const app = express();
 dotenv.config();
 const port = process.env.PORT || 5001;
-
-dbConnect();
 
 
 app.get('/', (req, res) => {
