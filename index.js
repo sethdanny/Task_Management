@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
-import dbConnect from './config/database.js';
+
 
 
 const app = express();
