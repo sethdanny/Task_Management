@@ -6,6 +6,7 @@ const dbConnect  = async (req, res) => {
             {
                 dbName: 'Task_Manager'
             })
+        console.log(`MongoDB database is connected: ${conn.connection.host}`.underline.red);
     } catch (error) {
         
     }
