@@ -2,10 +2,15 @@ import express from 'express';
 import dotenv from 'dotenv';
 import colors from 'colors';
 import morgan from 'morgan';
+import dbConnect from './config/database.js';
+
 
 const app = express();
 dotenv.config();
 const port = process.env.PORT || 5001;
+
+dbConnect();
+
 
 app.get('/', (req, res) => {
     res.send('Welcome to task management API');
