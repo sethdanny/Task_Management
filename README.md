@@ -74,4 +74,4 @@ npm run server
 Nadduli Daniel <naddulidaniel1994@gmail.com>
 
 ### License
-* This project is licensed under the MIT `License`.`
+* This project is licensed under the `MIT License`
