@@ -16,7 +16,7 @@ class Task {
     }
 
     static async getTask(task_id) {
-        const [rows] = await db.execute(`SELECT * FROM tasks WHERE id = ?`, [task_id]);
+        const [rows] = await db.execute(`SELECT * FROM tasks WHERE task_id = ?`, [task_id]);
         return rows[0];
     }
 
