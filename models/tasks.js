@@ -26,7 +26,7 @@ class Task {
         const [result] = await db.execute(
             `INSERT INTO tasks (title, description, status, dueDate, user_id) VALUES (?, ?, ?, ?, ?)`,
             [this.title, this.description, this.status, this.dueDate, this.user_id]);
-            this.id = result.insertId;
+            this.user_id = result.insertId;
             return this;
     }
 
