@@ -18,3 +18,15 @@ export const registerUser = async (req, res) => {
         return res.status(500).json({error: error.message});
     }
 }
+
+export const getUser = async (req, res) => {
+    const user_id = req.params.id;
+    console.log(user_id);
+    try {
+        const singleUser = await User.getUserById(user_id);
+        if (!singleUser) return res.status(404).json({error: 'User not found!'});
+        res.status(200).json(singleUser);
+    } catch (error) {
+        res.status(500).json({error: error.message});
+    }
+}
