@@ -29,6 +29,17 @@ const db = mysql.createPool({
       await db.query(createUsersTableQuery);
       console.log('User table created or already exists');
   
+     /* const createTasksTableQuery = `CREATE TABLE IF NOT EXISTS tasks (
+        task_id INT PRIMARY KEY AUTO_INCREMENT,
+        title VARCHAR(255) NOT NULL,
+        description TEXT,
+        status VARCHAR(20) DEFAULT 'todo',
+        dueDate DATE,
+        user_id INT,
+        CONSTRAINT fk_user
+        FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE;
+      )`;
+  */
       const createTasksTableQuery = `CREATE TABLE IF NOT EXISTS tasks (
         task_id INT PRIMARY KEY AUTO_INCREMENT,
         title VARCHAR(255) NOT NULL,
@@ -37,9 +48,10 @@ const db = mysql.createPool({
         dueDate DATE,
         user_id INT,
         CONSTRAINT fk_user
-        FOREIGN KEY (user_id) REFERENCES users(user_id)
-      )`;
-  
+          FOREIGN KEY (user_id) REFERENCES users(user_id)
+          ON DELETE CASCADE
+      );`
+      
       await db.query(createTasksTableQuery);
       console.log('Task table created or already exists');
   

@@ -54,3 +54,17 @@ export const updateUser = async (req, res) => {
         res.status(500).json({error: error.message});
     }
 }
+
+export const deleteUser = async (req, res) => {
+    const user_id = req.params.id;
+    try {
+        const isDeleted = await User.deleteUser(user_id);
+        if (isDeleted) {
+            res.status(204).send();
+        } else {
+            res.status(404).json({error: 'User not found!'});
+        }
+    } catch (error) {
+        res.status(500).json({error: error.message});
+    }
+}
