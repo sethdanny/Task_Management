@@ -2,6 +2,7 @@ import db from './config/database.js';
 import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
+import authRoutes from './routes/authRoutes.js';
 import taskRoutes from './routes/taskRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 
@@ -16,6 +17,7 @@ async function startServer() {
         app.use(express.json());
         app.use(morgan('dev'));
 
+        app.use('/api/v1/user', authRoutes);
         app.use('/api/v1/users', userRoutes);
         app.use('/api/v1/tasks', taskRoutes);
 
