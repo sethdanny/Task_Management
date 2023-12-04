@@ -10,8 +10,10 @@ class Task {
         this.user_id = user_id
     }
 
-    static async getAllTasks() {
-        const [rows] = await db.execute(`SELECT * FROM tasks`);
+    static async getAllTasks(page = 1, pageSize = 10) {
+        const offset = (page - 1) * pageSize;
+        const [rows] = await db.execute(`SELECT * FROM tasks LIMIT ? OFFSET ?`,
+        [pageSize, offset]);
         return rows;
     }
 
@@ -30,20 +32,19 @@ class Task {
 
     static async updateTask(task_id, updatedTaskData) {
         const [result] = await db.execute(
-            `UPDATE tasks SET title = ?, description = ?, status = ?, dueDate = ? WHERE id = ?`,
+            `UPDATE tasks SET title = ?, description = ?, status = ?, dueDate = ? WHERE task_id = ?`,
             [updatedTaskData.title, updatedTaskData.description, updatedTaskData.status, updatedTaskData.dueDate, task_id]);
 
             if (result.affectedRows > 0) {
-                const updatedTask = await Task.getTaskById(taskId);
+                const updatedTask = await Task.getTask(task_id);
                 return updatedTask;
               } else {
                 return null;
               }
     }
 
-    static async deleteTask(taskId) {
-        const [result] = await db.execute('DELETE FROM tasks WHERE id = ?', [task_id]);
-    
+    static async deleteTask(task_id) {
+        const [result] = await db.execute('DELETE FROM tasks WHERE task_id = ?', [task_id]);
         return result.affectedRows > 0;
       }
 }
