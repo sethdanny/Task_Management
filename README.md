@@ -73,5 +73,8 @@ npm run server
 ### Contributing
 Nadduli Daniel <naddulidaniel1994@gmail.com>
 
+### API Documentation
+https://documenter.getpostman.com/view/27746757/2s9YeLZVUL
+
 ### License
 * This project is licensed under the `MIT License`
