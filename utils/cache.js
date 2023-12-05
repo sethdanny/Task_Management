@@ -1,19 +1,30 @@
-import redis from 'redis';
+import NodeCache from "node-cache";
+const cache = new NodeCache();
 
-const client = redis.createClient(process.env.REDIS_URL);
+const cacheMiddleware = (req, res, next) => {
+    if (req.method !== 'GET') {
+        console.log('Cannot cache non-GET methods');
+        return next();
+    }
 
-export const cacheMiddleWare = (key) => (req, res, next) => {
-    client.get(key, (err, data) => {
-        if (err) throw new Error(err);
-        
-        if (data !== null) {
-            res.send(JSON.parse(data));
-        } else {
-            next();
-        }
-    });
+    const key = req.originalUrl + req.method;
+    const cachedData = cache.get(key);
+
+    if (cachedData) {
+        console.log('Cache hit');
+        return res.json(cachedData);
+    }
+
+    if (!res._headerSent) {
+        const originalSend = res.send;
+
+        res.send = (body) => {
+            cache.set(key, body, 10);
+            originalSend.call(res, body);
+        };
+    }
+
+    next();
 };
 
-export const cacheResponse = (key, data) => {
-    client.setex(key, 3600, JSON.stringify(data));
-};
+export default cacheMiddleware;

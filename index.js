@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import authRoutes from './routes/authRoutes.js';
 import taskRoutes from './routes/taskRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import cacheMiddleWare from './utils/cache.js';
 
 
 const app = express();
@@ -16,6 +17,7 @@ async function startServer() {
         await db;
         app.use(express.json());
         app.use(morgan('dev'));
+        app.use(cacheMiddleWare);
 
         app.use('/api/v1/user', authRoutes);
         app.use('/api/v1/users', userRoutes);

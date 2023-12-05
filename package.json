@@ -23,6 +23,6 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "mysql2": "^3.6.5",
-    "redis": "^4.6.11"
+    "node-cache": "^5.1.2"
   }
 }

@@ -1,5 +1,6 @@
 import  express from 'express';
 import authenticate from '../middlewares/authMiddleware.js';
+import cacheMiddleWare from '../utils/cache.js';
 import { createTask,
     deleteTask,
     findTask,
@@ -9,9 +10,9 @@ import { createTask,
 
 const router = express.Router();
 
-router.get('/', authenticate, getTasks);
+router.get('/', authenticate, cacheMiddleWare, getTasks);
 router.post('/', authenticate, createTask);
-router.get('/:id', findTask);
+router.get('/:id', authenticate, cacheMiddleWare, findTask);
 router.put('/:id', authenticate, updatedTaskData);
 router.delete('/:id', authenticate, deleteTask);
 
