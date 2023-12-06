@@ -77,4 +77,4 @@ Nadduli Daniel <naddulidaniel1994@gmail.com>
 https://documenter.getpostman.com/view/27746757/2s9YeLZVUL
 
 ### License
-* This project is licensed under the `MIT License`
+* This project is licensed under the **MIT License**
