@@ -27,9 +27,7 @@ const db = mysql.createPool({
       )`;
   
       await db.query(createUsersTableQuery);
-      console.log('User table created or already exists');
   
-      
       const createTasksTableQuery = `CREATE TABLE IF NOT EXISTS tasks (
         task_id INT PRIMARY KEY AUTO_INCREMENT,
         title VARCHAR(255) NOT NULL,
@@ -43,9 +41,8 @@ const db = mysql.createPool({
       );`
       
       await db.query(createTasksTableQuery);
-      console.log('Task table created or already exists');
   
-      console.log('Database setup completed successfully.');
+      console.log('Connected to MYSQL Database successfully.'.underline.red);
     } catch (error) {
       console.error('Error setting up the database:', error);
       process.exit(1);
