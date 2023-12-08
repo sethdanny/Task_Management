@@ -1,6 +1,6 @@
 # Task Management API
 
-Welcome to the Task Management API project!. This API provides functionality for managing tasks with user authentication using jsonwebtoken.
+Welcome to the Task Management API project!. This API provides functionality for managing tasks with user authentication using JSON web tokens.
 
 ## Table of Contents
 - [Features](#features)
@@ -78,3 +78,5 @@ https://documenter.getpostman.com/view/27746757/2s9YeLZVUL
 
 ### License
 * This project is licensed under the **MIT License**
+
+  ![database](https://github.com/sethdanny/Task_Management/assets/111246146/02946524-87c7-4b2d-85d9-6d1573c5d34f)
