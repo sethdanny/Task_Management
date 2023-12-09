@@ -78,5 +78,3 @@ https://documenter.getpostman.com/view/27746757/2s9YeLZVUL
 
 ### License
 * This project is licensed under the **MIT License**
-
-  ![database](https://github.com/sethdanny/Task_Management/assets/111246146/02946524-87c7-4b2d-85d9-6d1573c5d34f)

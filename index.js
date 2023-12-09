@@ -1,4 +1,4 @@
-import db from './config/database.js';
+import db, { initDatabase } from './config/database.js';
 import express from 'express';
 import dotenv from 'dotenv';
 import morgan from 'morgan';
@@ -16,7 +16,7 @@ const port = process.env.PORT || 5001;
 
 async function startServer() {
     try {
-        await db;
+        await initDatabase();
         app.use(express.json());
         app.use(morgan('dev'));
         app.use(cacheMiddleWare);
