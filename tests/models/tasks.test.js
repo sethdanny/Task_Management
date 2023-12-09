@@ -19,9 +19,7 @@ describe('Task.getAllTasks', () => {
     });
 
     it('should handle errors', async () => {
-        // Mock db.execute to throw an error
         jest.spyOn(db, 'execute').mockImplementation(() => Promise.reject(new Error('Database error')));
-    
         await expect(Task.getAllTasks()).rejects.toThrowError('Database error');
       });
 })
