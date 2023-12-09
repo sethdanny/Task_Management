@@ -18,8 +18,16 @@ class Task {
     }
 
     static async getTask(task_id) {
-        const [rows] = await db.execute(`SELECT * FROM tasks WHERE task_id = ?`, [task_id]);
+        try {
+            const [rows, _] = await db.execute(`SELECT * FROM tasks WHERE task_id = ?`, [task_id]);
+        if (rows.length === 0) {
+            return {error: `Task not found with the ID ${task_id}`}
+        }
         return rows[0];
+        } catch (error) {
+            console.error('Error fetching task:', error);
+            throw error;
+        }    
     }
 
     async save() {
