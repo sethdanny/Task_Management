@@ -19,7 +19,7 @@ class Task {
 
     static async getTask(task_id) {
         try {
-            const [rows, _] = await db.execute(`SELECT * FROM tasks WHERE task_id = ?`, [task_id]);
+            const [rows] = await db.execute(`SELECT * FROM tasks WHERE task_id = ?`, [task_id]);
         if (rows.length === 0) {
             return {error: `Task not found with the ID ${task_id}`}
         }
@@ -31,6 +31,9 @@ class Task {
     }
 
     async save() {
+        if (!this.title || !this.description || !this.status || !this.dueDate) {
+            throw new Error('Incomplete task data. Title, description, status, and dueDate are required.');
+        }
         const [result] = await db.execute(
             `INSERT INTO tasks (title, description, status, dueDate, user_id) VALUES (?, ?, ?, ?, ?)`,
             [this.title, this.description, this.status, this.dueDate, this.user_id]);
@@ -39,17 +42,28 @@ class Task {
     }
 
     static async updateTask(task_id, updatedTaskData) {
-        const [result] = await db.execute(
+        try {
+          if (!updatedTaskData.title || !updatedTaskData.description || !updatedTaskData.status || !updatedTaskData.dueDate) {
+            throw new Error('Incomplete task data. Title, description, status, and dueDate are required.');
+          }
+      
+          await db.execute(
             `UPDATE tasks SET title = ?, description = ?, status = ?, dueDate = ? WHERE task_id = ?`,
-            [updatedTaskData.title, updatedTaskData.description, updatedTaskData.status, updatedTaskData.dueDate, task_id]);
-
-            if (result.affectedRows > 0) {
-                const updatedTask = await Task.getTask(task_id);
-                return updatedTask;
-              } else {
-                return null;
-              }
-    }
+            [updatedTaskData.title, updatedTaskData.description, updatedTaskData.status, updatedTaskData.dueDate, task_id]
+          );
+      
+          const updatedTask = await Task.getTask(task_id);
+      
+          if (!updatedTask) {
+            return null;
+          }
+      
+          return updatedTask;
+        } catch (error) {
+          console.error('Error updating task:', error);
+          throw error;
+        }
+      }
 
     static async deleteTask(task_id) {
         const [result] = await db.execute('DELETE FROM tasks WHERE task_id = ?', [task_id]);

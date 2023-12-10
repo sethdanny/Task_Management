@@ -19,7 +19,8 @@ describe('Task.getAllTasks', () => {
     });
 
     it('should handle errors', async () => {
-        jest.spyOn(db, 'execute').mockImplementation(() => Promise.reject(new Error('Database error')));
+        jest.spyOn(db, 'execute').mockRejectedValueOnce(new Error('Database error'));
+        //jest.spyOn(db, 'execute').mockImplementation(() => Promise.reject(new Error('Database error')));
         await expect(Task.getAllTasks()).rejects.toThrowError('Database error');
       });
 })
@@ -52,8 +53,91 @@ describe('Task.getTask', () => {
     
     it('should handle errors', async () => {
         const task_id = 1;
-        jest.spyOn(db, 'execute').mockImplementation(() => Promise.reject(new Error('Database error')));
+        jest.spyOn(db, 'execute').mockRejectedValueOnce(new Error('Database error'));
+        //jest.spyOn(db, 'execute').mockImplementation(() => Promise.reject(new Error('Database error')));
     
         await expect(Task.getTask(task_id)).rejects.toThrowError('Database error');
       });
+});
+
+describe('Task.updateTask', () => {
+    it('should update task and return the updated task', async () => {
+        const mockExecute = jest.spyOn(db, 'execute');
+        const mockGetTask = jest.spyOn(Task, 'getTask');
+    
+        const task_id = 1;
+        const updatedTaskData = {
+          title: 'Updated Title',
+          description: 'Updated Description',
+          status: 'completed',
+          dueDate: '2023-12-31',
+        };
+    
+        const expectedUpdatedTask = {
+          task_id: 1,
+          title: 'Updated Title',
+          description: 'Updated Description',
+          status: 'completed',
+          dueDate: '2023-12-31',
+          user_id: null,
+        };
+    
+        mockExecute.mockReturnValueOnce([
+          [{ affectedRows: 1 }],
+          null
+        ]);
+        mockGetTask.mockReturnValueOnce(expectedUpdatedTask);
+    
+        const updatedTask = await Task.updateTask(task_id, updatedTaskData);
+    
+        expect(mockExecute).toHaveBeenCalledWith(
+          `UPDATE tasks SET title = ?, description = ?, status = ?, dueDate = ? WHERE task_id = ?`,
+          [
+            updatedTaskData.title,
+            updatedTaskData.description,
+            updatedTaskData.status,
+            updatedTaskData.dueDate,
+            task_id,
+          ]
+        );
+        expect(mockGetTask).toHaveBeenCalledWith(task_id);
+        expect(updatedTask).toEqual(expectedUpdatedTask);
+      });
+
+      it('should return null when task is not found for update', async () => {
+        const mockExecute = jest.spyOn(db, 'execute');
+        mockExecute.mockReturnValueOnce([
+          [{ affectedRows: 0 }],
+          null
+        ]);
+      
+        const task_id = 1;
+        const updatedTaskData = {
+          title: 'Updated Title',
+          description: 'Updated Description',
+          status: 'completed',
+          dueDate: '2023-12-31',
+        };
+      
+        jest.spyOn(Task, 'getTask').mockReturnValueOnce(null);
+      
+        const updatedTask = await Task.updateTask(task_id, updatedTaskData);
+      
+        expect(mockExecute).toHaveBeenCalledWith(
+          'UPDATE tasks SET title = ?, description = ?, status = ?, dueDate = ? WHERE task_id = ?',
+          [
+            updatedTaskData.title,
+            updatedTaskData.description,
+            updatedTaskData.status,
+            updatedTaskData.dueDate,
+            task_id,
+          ]
+        );
+        expect(updatedTask).toBeNull();
+      });
+    it('should handle errors', async () => {
+        jest.spyOn(db, 'execute').mockRejectedValueOnce(new Error('Database error'));
+        const task_id = 1;
+        await expect(Task.getTask(task_id)).rejects.toThrowError('Database error');
+    });
 });
