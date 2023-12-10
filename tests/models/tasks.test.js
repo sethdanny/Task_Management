@@ -18,9 +18,15 @@ describe('Task.getAllTasks', () => {
         expect(mockExecute).toHaveBeenCalledWith(`SELECT * FROM tasks LIMIT ? OFFSET ?`, [10, 0])
     });
 
+    it('should handle specific database errors', async () => {
+        const mockExecute = jest.spyOn(db, 'execute');
+        const expectedError = new Error('Database connection lost');
+        mockExecute.mockRejectedValueOnce(expectedError);
+        await expect(Task.getAllTasks()).rejects.toThrowError(expectedError);
+    });
+    
     it('should handle errors', async () => {
         jest.spyOn(db, 'execute').mockRejectedValueOnce(new Error('Database error'));
-        //jest.spyOn(db, 'execute').mockImplementation(() => Promise.reject(new Error('Database error')));
         await expect(Task.getAllTasks()).rejects.toThrowError('Database error');
       });
 })
@@ -139,5 +145,38 @@ describe('Task.updateTask', () => {
         jest.spyOn(db, 'execute').mockRejectedValueOnce(new Error('Database error'));
         const task_id = 1;
         await expect(Task.getTask(task_id)).rejects.toThrowError('Database error');
+    });
+});
+
+describe('Task.delete a task', () => {
+    it('should delete task and return true', async () => {
+        const mockExecute = jest.spyOn(db, 'execute');
+        mockExecute.mockReturnValueOnce([{ affectedRows: 1 }, null]);
+      
+        const task_id = 1;
+      
+        const deleted = await Task.deleteTask(task_id);
+      
+        expect(mockExecute).toHaveBeenCalledWith('DELETE FROM tasks WHERE task_id = ?', [task_id]);
+        expect(deleted).toBe(true);
+      });
+
+      it('should return false when task is not found for deletion', async () => {
+        const mockExecute = jest.spyOn(db, 'execute');
+        mockExecute.mockReturnValueOnce([[{ affectedRows: 0 }], null]);
+      
+        const task_id = 2;
+      
+        const deleted = await Task.deleteTask(task_id);
+      
+        expect(mockExecute).toHaveBeenCalledWith('DELETE FROM tasks WHERE task_id = ?', [task_id]);
+        expect(deleted).toBeFalsy();
+      });
+
+      it('should handle errors', async () => {
+        jest.spyOn(db, 'execute').mockRejectedValueOnce(new Error('Database error'));
+        const task_id = 1;
+
+        await expect(Task.deleteTask(task_id)).rejects.toThrowError('Database error');
     });
 });
