@@ -1,0 +1,29 @@
+version: '3'
+services:
+  mysql-db:
+    container_name: mysql_task_management
+    image: mysql:8.0
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  app:
+    container_name: docker-task_management
+    restart: unless-stopped
+    build: .
+    ports:
+      - "3000:5000"
+    volumes:
+      - ./app:/app:ro
+    depends_on:
+      - mysql-db
+      
+volumes:
+  mysql-data:
